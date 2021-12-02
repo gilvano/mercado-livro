@@ -14,7 +14,10 @@ class CustomerController {
     var customers = mutableListOf<CustomerModel>()
 
     @GetMapping
-    fun getAll(): List<CustomerModel> {
+    fun getAll(@RequestParam name: String?): List<CustomerModel> {
+        name?.let {
+            return customers.filter { it.name.contains(name) }
+        }
         return customers
     }
 
@@ -29,13 +32,13 @@ class CustomerController {
 
     @GetMapping("/{id}")
     fun getCustomer(@PathVariable id: String): CustomerModel? {
-        return customers.filter{ it.id == id }.first()
+        return customers.first { it.id == id }
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@PathVariable id: String, @RequestBody customer: PutCustomerRequest) {
-        customers.filter{ it.id == id }.first().let {
+        customers.first { it.id == id }.let {
             it.name = customer.name
             it.email = customer.email
         }
