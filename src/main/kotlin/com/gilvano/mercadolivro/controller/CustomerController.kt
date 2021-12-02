@@ -4,6 +4,7 @@ import com.gilvano.mercadolivro.controller.request.PostCustomerRequest
 import com.gilvano.mercadolivro.model.CustomerModel
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.HttpClientErrorException
 
 @RestController
 @RequestMapping("customer")
@@ -24,4 +25,16 @@ class CustomerController {
         customers.add(newCustomer)
         return newCustomer
     }
+
+    @GetMapping("/{id}")
+    fun getCustomer(@PathVariable id: Int): CustomerModel? {
+        return customers.filter{ it.id.toInt() == id }.first()
+    }
+
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Int, @RequestBody customer: PostCustomerRequest): CustomerModel? {
+        return customers.filter{ it.id.toInt() == id }.first()
+    }
+
+
 }
