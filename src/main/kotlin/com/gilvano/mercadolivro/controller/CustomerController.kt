@@ -1,6 +1,7 @@
 package com.gilvano.mercadolivro.controller
 
 import com.gilvano.mercadolivro.controller.request.PostCustomerRequest
+import com.gilvano.mercadolivro.controller.request.PutCustomerRequest
 import com.gilvano.mercadolivro.model.CustomerModel
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -32,8 +33,13 @@ class CustomerController {
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Int, @RequestBody customer: PostCustomerRequest): CustomerModel? {
-        return customers.filter{ it.id.toInt() == id }.first()
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun update(@PathVariable id: Int, @RequestBody customer: PutCustomerRequest) {
+        customers.filter{ it.id.toInt() == id }.first().let {
+            it.name = customer.name
+            it.email = customer.email
+        }
+
     }
 
 
