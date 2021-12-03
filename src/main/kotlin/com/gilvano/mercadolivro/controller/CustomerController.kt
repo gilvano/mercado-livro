@@ -2,6 +2,7 @@ package com.gilvano.mercadolivro.controller
 
 import com.gilvano.mercadolivro.controller.request.PostCustomerRequest
 import com.gilvano.mercadolivro.controller.request.PutCustomerRequest
+import com.gilvano.mercadolivro.extension.toCustomModel
 import com.gilvano.mercadolivro.model.CustomerModel
 import com.gilvano.mercadolivro.service.CustomerService
 import org.springframework.http.HttpStatus
@@ -22,7 +23,7 @@ class CustomerController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody customer: PostCustomerRequest): CustomerModel {
-        return customerService.create(customer)
+        return customerService.create(customer.toCustomModel())
     }
 
     @GetMapping("/{id}")
@@ -33,7 +34,7 @@ class CustomerController(
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@PathVariable id: String, @RequestBody customer: PutCustomerRequest) {
-       customerService.update(id, customer)
+       customerService.update(customer.toCustomModel(id))
     }
 
     @DeleteMapping("/{id}")

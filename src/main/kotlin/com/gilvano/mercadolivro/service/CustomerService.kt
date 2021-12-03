@@ -19,19 +19,19 @@ class CustomerService {
         return customers
     }
 
-    fun create(customer: PostCustomerRequest): CustomerModel {
-        var id = (customers?.count()+1 ?: 1).toString()
-        var newCustomer = CustomerModel(id, customer.name, customer.email)
-        customers.add(newCustomer)
-        return newCustomer
+    fun create(customer: CustomerModel): CustomerModel {
+        var maxCust = customers?.maxByOrNull { it.id!! }
+        customer.id = if (maxCust != null ) maxCust.id!!.toInt().inc().toString() else "1"
+        customers.add(customer)
+        return customer
     }
 
     fun getCustomer(id: String): CustomerModel? {
         return customers.first { it.id == id }
     }
 
-    fun update(id: String, customer: PutCustomerRequest) {
-        customers.first { it.id == id }.let {
+    fun update(customer: CustomerModel) {
+        customers.first { it.id == customer.id }.let {
             it.name = customer.name
             it.email = customer.email
         }
