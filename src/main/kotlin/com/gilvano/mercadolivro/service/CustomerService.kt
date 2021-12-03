@@ -1,43 +1,40 @@
 package com.gilvano.mercadolivro.service
 
-import com.gilvano.mercadolivro.controller.request.PostCustomerRequest
-import com.gilvano.mercadolivro.controller.request.PutCustomerRequest
 import com.gilvano.mercadolivro.model.CustomerModel
+import com.gilvano.mercadolivro.repository.CustomerRepository
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
 
 @Service
-class CustomerService {
-    var customers = mutableListOf<CustomerModel>()
-
+class CustomerService(
+    val customerRepository: CustomerRepository
+) {
     fun getAll(name: String?): List<CustomerModel> {
         name?.let {
-            return customers.filter { it.name.contains(name) }
+            return customerRepository.findByNameContaining(name)
         }
-        return customers
+        return customerRepository.findAll().toList()
     }
 
     fun create(customer: CustomerModel): CustomerModel {
-        var maxCust = customers.maxByOrNull { it.id!! }
-        customer.id = if (maxCust != null ) maxCust.id!!.inc() else 1
-        customers.add(customer)
-        return customer
+        return customerRepository.save(customer)
     }
 
     fun getCustomer(id: Int): CustomerModel? {
-        return customers.first { it.id == id }
+        return customerRepository.findById(id).orElseThrow()
     }
 
     fun update(customer: CustomerModel) {
-        customers.first { it.id == customer.id }.let {
-            it.name = customer.name
-            it.email = customer.email
+        if(!customerRepository.existsById(customer.id!!)){
+            throw Exception()
         }
+
+        customerRepository.save(customer)
     }
 
     fun delete(id: Int) {
-        customers.removeIf { it.id == id }
+        if(!customerRepository.existsById(id)){
+            throw Exception()
+        }
+        customerRepository.deleteById(id)
     }
 }
