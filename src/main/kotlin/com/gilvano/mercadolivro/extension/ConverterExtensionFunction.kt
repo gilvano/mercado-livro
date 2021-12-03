@@ -8,6 +8,6 @@ fun PostCustomerRequest.toCustomModel(): CustomerModel {
     return CustomerModel(name = this.name, email = this.email)
 }
 
-fun PutCustomerRequest.toCustomModel(id: String): CustomerModel {
+fun PutCustomerRequest.toCustomModel(id: Int): CustomerModel {
     return CustomerModel(id = id, name = this.name, email = this.email)
 }

@@ -20,13 +20,13 @@ class CustomerService {
     }
 
     fun create(customer: CustomerModel): CustomerModel {
-        var maxCust = customers?.maxByOrNull { it.id!! }
-        customer.id = if (maxCust != null ) maxCust.id!!.toInt().inc().toString() else "1"
+        var maxCust = customers.maxByOrNull { it.id!! }
+        customer.id = if (maxCust != null ) maxCust.id!!.inc() else 1
         customers.add(customer)
         return customer
     }
 
-    fun getCustomer(id: String): CustomerModel? {
+    fun getCustomer(id: Int): CustomerModel? {
         return customers.first { it.id == id }
     }
 
@@ -37,7 +37,7 @@ class CustomerService {
         }
     }
 
-    fun delete(id: String) {
+    fun delete(id: Int) {
         customers.removeIf { it.id == id }
     }
 }
