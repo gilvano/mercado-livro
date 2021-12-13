@@ -7,7 +7,6 @@ import com.gilvano.mercadolivro.model.CustomerModel
 import com.gilvano.mercadolivro.service.CustomerService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.client.HttpClientErrorException
 
 @RestController
 @RequestMapping("customer")
@@ -28,7 +27,7 @@ class CustomerController(
 
     @GetMapping("/{id}")
     fun getCustomer(@PathVariable id: Int): CustomerModel? {
-        return customerService.getCustomer(id)
+        return customerService.getById(id)
     }
 
     @PutMapping("/{id}")
