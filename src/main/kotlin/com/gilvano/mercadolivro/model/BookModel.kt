@@ -4,7 +4,7 @@ import com.gilvano.mercadolivro.enums.BookStatus
 import java.math.BigDecimal
 import javax.persistence.*
 
-@Entity(name = "book")
+@Entity(name = "customer")
 data class BookModel(
 
     @Id
