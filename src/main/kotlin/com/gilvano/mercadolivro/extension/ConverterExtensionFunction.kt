@@ -4,6 +4,8 @@ import com.gilvano.mercadolivro.controller.request.PostBookRequest
 import com.gilvano.mercadolivro.controller.request.PostCustomerRequest
 import com.gilvano.mercadolivro.controller.request.PutBookRequest
 import com.gilvano.mercadolivro.controller.request.PutCustomerRequest
+import com.gilvano.mercadolivro.controller.response.BookResponse
+import com.gilvano.mercadolivro.controller.response.CustomerResponse
 import com.gilvano.mercadolivro.enums.BookStatus
 import com.gilvano.mercadolivro.enums.CustomerStatus
 import com.gilvano.mercadolivro.model.BookModel
@@ -33,5 +35,24 @@ fun PutBookRequest.toBookModel(previousValue: BookModel): BookModel {
         price = this.price ?: previousValue.price,
         status = previousValue.status,
         customer = previousValue.customer
+    )
+}
+
+fun CustomerModel.toResponse(): CustomerResponse {
+    return CustomerResponse(
+        id = this.id,
+        name = this.name,
+        email = this.email,
+        status = this.status
+    )
+}
+
+fun BookModel.toResponse(): BookResponse {
+    return BookResponse(
+        id = this.id,
+        name = this.name,
+        price = this.price,
+        status = this.status,
+        customer = this.customer
     )
 }
