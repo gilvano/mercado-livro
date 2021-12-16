@@ -2,7 +2,6 @@ package com.gilvano.mercadolivro.extension
 
 import com.gilvano.mercadolivro.controller.request.PostBookRequest
 import com.gilvano.mercadolivro.controller.request.PostCustomerRequest
-import com.gilvano.mercadolivro.controller.request.PutBookRequest
 import com.gilvano.mercadolivro.controller.request.PutCustomerRequest
 import com.gilvano.mercadolivro.enums.BookStatus
 import com.gilvano.mercadolivro.model.BookModel
@@ -22,15 +21,5 @@ fun PostBookRequest.toBookModel(customer: CustomerModel?): BookModel {
         price = this.price,
         status = BookStatus.ATIVO,
         customer = customer
-    )
-}
-
-fun PutBookRequest.toBookModel(previousValue: BookModel): BookModel {
-    return BookModel(
-        id = previousValue.id,
-        name = this.name ?: previousValue.name,
-        price = this.price ?: previousValue.price,
-        status = previousValue.status,
-        customer = previousValue.customer
     )
 }
