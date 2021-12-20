@@ -1,6 +1,7 @@
 package com.gilvano.mercadolivro.service
 
 import com.gilvano.mercadolivro.enums.CustomerStatus
+import com.gilvano.mercadolivro.enums.Errors
 import com.gilvano.mercadolivro.extension.NotFoundException
 import com.gilvano.mercadolivro.model.CustomerModel
 import com.gilvano.mercadolivro.repository.CustomerRepository
@@ -23,7 +24,7 @@ class CustomerService(
     }
 
     fun findById(id: Int): CustomerModel {
-        return customerRepository.findById(id).orElseThrow { NotFoundException("Customer [${id}] not exists", "ML-0002") }
+        return customerRepository.findById(id).orElseThrow { NotFoundException(Errors.ML1101.message.format(id), Errors.ML1101.code) }
     }
 
     fun update(customer: CustomerModel) {
