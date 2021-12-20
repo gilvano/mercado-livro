@@ -1,6 +1,7 @@
 package com.gilvano.mercadolivro.service
 
 import com.gilvano.mercadolivro.enums.CustomerStatus
+import com.gilvano.mercadolivro.extension.NotFoundException
 import com.gilvano.mercadolivro.model.CustomerModel
 import com.gilvano.mercadolivro.repository.CustomerRepository
 import org.springframework.stereotype.Service
@@ -22,7 +23,7 @@ class CustomerService(
     }
 
     fun findById(id: Int): CustomerModel {
-        return customerRepository.findById(id).orElseThrow()
+        return customerRepository.findById(id).orElseThrow { NotFoundException("Customer [${id}] not exists", "ML-0002") }
     }
 
     fun update(customer: CustomerModel) {
