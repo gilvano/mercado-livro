@@ -2,7 +2,7 @@ package com.gilvano.mercadolivro.service
 
 import com.gilvano.mercadolivro.enums.BookStatus
 import com.gilvano.mercadolivro.enums.Errors
-import com.gilvano.mercadolivro.extension.NotFoundException
+import com.gilvano.mercadolivro.exception.NotFoundException
 import com.gilvano.mercadolivro.model.BookModel
 import com.gilvano.mercadolivro.model.CustomerModel
 import com.gilvano.mercadolivro.repository.BookRepository

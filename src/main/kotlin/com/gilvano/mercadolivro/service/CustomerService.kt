@@ -2,7 +2,7 @@ package com.gilvano.mercadolivro.service
 
 import com.gilvano.mercadolivro.enums.CustomerStatus
 import com.gilvano.mercadolivro.enums.Errors
-import com.gilvano.mercadolivro.extension.NotFoundException
+import com.gilvano.mercadolivro.exception.NotFoundException
 import com.gilvano.mercadolivro.model.CustomerModel
 import com.gilvano.mercadolivro.repository.CustomerRepository
 import org.springframework.stereotype.Service
