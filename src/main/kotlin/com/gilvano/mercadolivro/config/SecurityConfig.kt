@@ -1,5 +1,7 @@
 package com.gilvano.mercadolivro.config
 
+import com.gilvano.mercadolivro.repository.CustomerRepository
+import com.gilvano.mercadolivro.security.AuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -11,7 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig: WebSecurityConfigurerAdapter() {
+class SecurityConfig(
+    private val customerRepository: CustomerRepository
+): WebSecurityConfigurerAdapter() {
 
     private val PUBLIC_POST_MATCHERS = arrayOf(
         "/customer"
@@ -22,6 +26,7 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
         http.authorizeRequests()
             .antMatchers(HttpMethod.POST, *PUBLIC_POST_MATCHERS).permitAll()
             .anyRequest().authenticated()
+        http.addFilter(AuthenticationFilter(authenticationManager(), customerRepository))
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 
