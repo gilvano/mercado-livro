@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity(name = "purchase")
-class PurchaseModel (
+data class PurchaseModel (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +13,7 @@ class PurchaseModel (
 
     @ManyToOne
     @JoinColumn(name = "custumer_id")
-    val cutomer: CustomerModel,
+    val customer: CustomerModel,
 
     @ManyToMany
     @JoinTable(name = "purchase_book",
@@ -28,6 +28,6 @@ class PurchaseModel (
     val price: BigDecimal,
 
     @Column(name = "create_at")
-    val createAt: LocalDateTime
+    val createAt: LocalDateTime = LocalDateTime.now()
 
 )
