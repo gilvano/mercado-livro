@@ -12,7 +12,7 @@ data class PurchaseModel (
     var id: Int? = null,
 
     @ManyToOne
-    @JoinColumn(name = "custumer_id")
+    @JoinColumn(name = "customer_id")
     val customer: CustomerModel,
 
     @ManyToMany
