@@ -8,6 +8,7 @@ import com.gilvano.mercadolivro.controller.response.BookResponse
 import com.gilvano.mercadolivro.controller.response.CustomerResponse
 import com.gilvano.mercadolivro.enums.BookStatus
 import com.gilvano.mercadolivro.enums.CustomerStatus
+import com.gilvano.mercadolivro.enums.Role
 import com.gilvano.mercadolivro.model.BookModel
 import com.gilvano.mercadolivro.model.CustomerModel
 
@@ -16,7 +17,8 @@ fun PostCustomerRequest.toCustomModel(): CustomerModel {
         name = this.name,
         email = this.email,
         status = CustomerStatus.ATIVO,
-        password = this.password
+        password = this.password,
+        roles = setOf()
     )
 }
 
@@ -26,7 +28,8 @@ fun PutCustomerRequest.toCustomModel(previousValue: CustomerModel): CustomerMode
         name = this.name,
         email = this.email,
         status = previousValue.status,
-        password = previousValue.password
+        password = previousValue.password,
+        roles = setOf()
     )
 }
 
