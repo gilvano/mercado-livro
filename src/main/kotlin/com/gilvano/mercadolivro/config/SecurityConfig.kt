@@ -2,6 +2,7 @@ package com.gilvano.mercadolivro.config
 
 import com.gilvano.mercadolivro.repository.CustomerRepository
 import com.gilvano.mercadolivro.security.AuthenticationFilter
+import com.gilvano.mercadolivro.security.AuthorizationFilter
 import com.gilvano.mercadolivro.service.JwtUtil
 import com.gilvano.mercadolivro.service.UserDetailsCustomService
 import org.springframework.context.annotation.Bean
@@ -35,6 +36,7 @@ class SecurityConfig(
             .antMatchers(HttpMethod.POST, *PUBLIC_POST_MATCHERS).permitAll()
             .anyRequest().authenticated()
         http.addFilter(AuthenticationFilter(authenticationManager(), customerRepository, jwtUtil))
+        http.addFilter(AuthorizationFilter(authenticationManager(), userDetails, jwtUtil))
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 
