@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.gilvano.mercadolivro.controller.request.LoginRequest
 import com.gilvano.mercadolivro.exception.AuthenticationException
 import com.gilvano.mercadolivro.repository.CustomerRepository
+import com.gilvano.mercadolivro.service.JwtUtil
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -14,7 +15,8 @@ import javax.servlet.http.HttpServletResponse
 
 class AuthenticationFilter(
     authenticationManager: AuthenticationManager,
-    private val customerRepository: CustomerRepository
+    private val customerRepository: CustomerRepository,
+    private val jwtUtil: JwtUtil
 ): UsernamePasswordAuthenticationFilter(authenticationManager) {
 
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
@@ -36,8 +38,8 @@ class AuthenticationFilter(
         authResult: Authentication
     ) {
         val id = (authResult.principal as UserCustomDetails).id
-
-        response.addHeader("Authorization", "Bearer " + id)
+        val token = jwtUtil.generateToken(id.toString())
+        response.addHeader("Authorization", "Bearer $token")
     }
 
 }
