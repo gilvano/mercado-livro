@@ -4,6 +4,7 @@ import com.gilvano.mercadolivro.enums.Role
 import com.gilvano.mercadolivro.repository.CustomerRepository
 import com.gilvano.mercadolivro.security.AuthenticationFilter
 import com.gilvano.mercadolivro.security.AuthorizationFilter
+import com.gilvano.mercadolivro.security.CustomAuthenticationEntryPoint
 import com.gilvano.mercadolivro.service.JwtUtil
 import com.gilvano.mercadolivro.service.UserDetailsCustomService
 import org.springframework.context.annotation.Bean
@@ -27,7 +28,8 @@ import org.springframework.web.filter.CorsFilter
 class SecurityConfig(
     private val customerRepository: CustomerRepository,
     private val userDetails: UserDetailsCustomService,
-    private val jwtUtil: JwtUtil
+    private val jwtUtil: JwtUtil,
+    private val customEntryPoint: CustomAuthenticationEntryPoint
 ): WebSecurityConfigurerAdapter() {
 
     private val PUBLIC_MATCHERS = arrayOf<String>()
@@ -50,6 +52,7 @@ class SecurityConfig(
         http.addFilter(AuthenticationFilter(authenticationManager(), customerRepository, jwtUtil))
         http.addFilter(AuthorizationFilter(authenticationManager(), userDetails, jwtUtil))
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.exceptionHandling().authenticationEntryPoint(customEntryPoint)
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
