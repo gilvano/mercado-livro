@@ -1,5 +1,6 @@
 package com.gilvano.mercadolivro.config
 
+import com.gilvano.mercadolivro.enums.Role
 import com.gilvano.mercadolivro.repository.CustomerRepository
 import com.gilvano.mercadolivro.security.AuthenticationFilter
 import com.gilvano.mercadolivro.security.AuthorizationFilter
@@ -29,11 +30,16 @@ class SecurityConfig(
         "/customer"
     )
 
+    private val ADMIN_MATCHERS = arrayOf(
+        "/admin/**"
+    )
+
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable()
         http.authorizeRequests()
             .antMatchers(*PUBLIC_MATCHERS).permitAll()
             .antMatchers(HttpMethod.POST, *PUBLIC_POST_MATCHERS).permitAll()
+            .antMatchers(*ADMIN_MATCHERS).hasAuthority(Role.ADMIN.description)
             .anyRequest().authenticated()
         http.addFilter(AuthenticationFilter(authenticationManager(), customerRepository, jwtUtil))
         http.addFilter(AuthorizationFilter(authenticationManager(), userDetails, jwtUtil))
