@@ -1,9 +1,6 @@
 package com.gilvano.mercadolivro.extension
 
-import com.gilvano.mercadolivro.controller.request.PostBookRequest
-import com.gilvano.mercadolivro.controller.request.PostCustomerRequest
-import com.gilvano.mercadolivro.controller.request.PutBookRequest
-import com.gilvano.mercadolivro.controller.request.PutCustomerRequest
+import com.gilvano.mercadolivro.controller.request.*
 import com.gilvano.mercadolivro.controller.response.BookResponse
 import com.gilvano.mercadolivro.controller.response.CustomerResponse
 import com.gilvano.mercadolivro.enums.BookStatus
@@ -11,6 +8,7 @@ import com.gilvano.mercadolivro.enums.CustomerStatus
 import com.gilvano.mercadolivro.enums.Role
 import com.gilvano.mercadolivro.model.BookModel
 import com.gilvano.mercadolivro.model.CustomerModel
+import org.springframework.data.domain.Page
 
 fun PostCustomerRequest.toCustomModel(): CustomerModel {
     return CustomerModel(
@@ -69,4 +67,12 @@ fun BookModel.toResponse(): BookResponse {
         status = this.status,
         customer = this.customer
     )
+}
+
+fun <T> Page<T>.toPageResponse(): PageResponse<T> {
+    return PageResponse(
+        this.content,
+        this.number,
+        this.totalElements,
+        this.totalPages)
 }

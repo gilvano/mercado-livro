@@ -1,9 +1,11 @@
 package com.gilvano.mercadolivro.controller
 
+import com.gilvano.mercadolivro.controller.request.PageResponse
 import com.gilvano.mercadolivro.controller.request.PostBookRequest
 import com.gilvano.mercadolivro.controller.request.PutBookRequest
 import com.gilvano.mercadolivro.controller.response.BookResponse
 import com.gilvano.mercadolivro.extension.toBookModel
+import com.gilvano.mercadolivro.extension.toPageResponse
 import com.gilvano.mercadolivro.extension.toResponse
 import com.gilvano.mercadolivro.service.BookService
 import com.gilvano.mercadolivro.service.CustomerService
@@ -28,8 +30,8 @@ class BookController(
     }
 
     @GetMapping
-    fun findAll(@PageableDefault(page = 0, size = 10) pageable: Pageable): Page<BookResponse> {
-        return bookService.findAll(pageable).map { it.toResponse() }
+    fun findAll(@PageableDefault(page = 0, size = 10) pageable: Pageable): PageResponse<BookResponse> {
+        return bookService.findAll(pageable).map { it.toResponse() }.toPageResponse()
     }
 
     @GetMapping("/actives")
