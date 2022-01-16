@@ -86,5 +86,7 @@ class CustomerControllerTest {
 
         val customers = customerRepository.findAll().toList()
         assert(1 ==customers.size)
+        assert(customers[0].name == request.name)
+        assert(customers[0].email == request.email)
     }
 }
