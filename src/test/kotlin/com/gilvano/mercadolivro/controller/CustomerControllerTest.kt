@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import kotlin.random.Random
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -73,5 +74,17 @@ class CustomerControllerTest {
             .andExpect(jsonPath("$[0].name").value(customer1.name))
             .andExpect(jsonPath("$[0].email").value(customer1.email))
             .andExpect(jsonPath("$[0].status").value(customer1.status.name))
+    }
+
+    @Test
+    fun `should create customer`() {
+        val request = PostCustomerRequest("fake name", "${Random.nextInt()}@email.com", "123456")
+        mockMvc.perform(post("/customer")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated)
+
+        val customers = customerRepository.findAll().toList()
+        assert(1 ==customers.size)
     }
 }
