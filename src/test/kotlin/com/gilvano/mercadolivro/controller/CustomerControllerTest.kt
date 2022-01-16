@@ -2,10 +2,13 @@ package com.gilvano.mercadolivro.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gilvano.mercadolivro.controller.request.PostCustomerRequest
+import com.gilvano.mercadolivro.controller.request.PutCustomerRequest
 import com.gilvano.mercadolivro.helper.buildCustomer
 import com.gilvano.mercadolivro.repository.CustomerRepository
 import com.gilvano.mercadolivro.security.UserCustomDetails
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,8 +20,7 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.random.Random
@@ -93,6 +95,18 @@ class CustomerControllerTest {
     }
 
     @Test
+    fun `should throw error when create customer has invalid information`() {
+        val request = PostCustomerRequest("", "${Random.nextInt()}@email.com", "123456")
+        mockMvc.perform(post("/customer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnprocessableEntity)
+            .andExpect(jsonPath("$.httpCode").value(422))
+            .andExpect(jsonPath("$.message").value("Invalid request"))
+            .andExpect(jsonPath("$.internalCode").value("ML0001"))
+    }
+
+    @Test
     fun `should get user by id when user has the same id`() {
         val customer = customerRepository.save(buildCustomer())
 
@@ -130,4 +144,19 @@ class CustomerControllerTest {
 
     }
 
+    @Test
+    fun `should update customer`() {
+        val customer = customerRepository.save(buildCustomer())
+        val request = PutCustomerRequest("Gustvao", "emailupdate@email.com")
+
+        mockMvc.perform(put("/customer/${customer.id}").with(user(UserCustomDetails(customer)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNoContent)
+
+        val customers = customerRepository.findAll().toList()
+        assertEquals(1, customers.size)
+        assertEquals(request.name, customers[0].name)
+        assertEquals(request.email, customers[0].email)
+    }
 }
