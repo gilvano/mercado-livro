@@ -60,4 +60,18 @@ class CustomerControllerTest {
             .andExpect(jsonPath("$[1].status").value(customer2.status.name))
 
     }
+
+    @Test
+    fun `should return all customers by name when get all`() {
+        val customer1 = customerRepository.save(buildCustomer(name = "Gustavo"))
+        customerRepository.save(buildCustomer(name ="Daniel"))
+
+        val response = mockMvc.perform(get("/customer?name=Gus"))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].id").value(customer1.id))
+            .andExpect(jsonPath("$[0].name").value(customer1.name))
+            .andExpect(jsonPath("$[0].email").value(customer1.email))
+            .andExpect(jsonPath("$[0].status").value(customer1.status.name))
+    }
 }
