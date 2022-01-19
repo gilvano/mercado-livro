@@ -3,11 +3,11 @@ package com.gilvano.mercadolivro.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gilvano.mercadolivro.controller.request.PostCustomerRequest
 import com.gilvano.mercadolivro.controller.request.PutCustomerRequest
+import com.gilvano.mercadolivro.enums.CustomerStatus
 import com.gilvano.mercadolivro.helper.buildCustomer
 import com.gilvano.mercadolivro.repository.CustomerRepository
 import com.gilvano.mercadolivro.security.UserCustomDetails
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -158,5 +158,42 @@ class CustomerControllerTest {
         assertEquals(1, customers.size)
         assertEquals(request.name, customers[0].name)
         assertEquals(request.email, customers[0].email)
+    }
+
+    @Test
+    fun `should throw error when update customer has invalid information`() {
+        val request = PutCustomerRequest("", "")
+        val customer = customerRepository.save(buildCustomer())
+
+        mockMvc.perform(put("/customer/${customer.id}").with(user(UserCustomDetails(customer)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnprocessableEntity)
+            .andExpect(jsonPath("$.httpCode").value(422))
+            .andExpect(jsonPath("$.message").value("Invalid request"))
+            .andExpect(jsonPath("$.internalCode").value("ML0001"))
+    }
+
+    @Test
+    fun `should delete customer`() {
+        val customer = customerRepository.save(buildCustomer())
+        mockMvc.perform(delete("/customer/${customer.id}").with(user(UserCustomDetails(customer))))
+            .andExpect(status().isNoContent)
+
+        val customerDeleted = customerRepository.findById(customer.id!!)
+
+        assertEquals(CustomerStatus.INATIVO, customerDeleted.get().status)
+    }
+
+    @Test
+    @WithMockUser(roles = ["USER"])
+    fun `should return not found when delete customer not exists`() {
+        val customer = customerRepository.save(buildCustomer())
+        mockMvc.perform(delete("/customer/${customer.id}").with(user(UserCustomDetails(customer))))
+            .andExpect(status().isNotFound)
+            .andExpect(jsonPath("$.httpCode").value(404))
+            .andExpect(jsonPath("$.message").value("Invalid request"))
+            .andExpect(jsonPath("$.internalCode").value("ML0001"))
+
     }
 }
